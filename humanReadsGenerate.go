@@ -21,18 +21,28 @@ func main() {
 	N,_ := strconv.Atoi(os.Args[3])
 	
 	contigs := make([]byte, 0)
-
 	for _, file := range files {
 		contig := contigExtract(os.Args[1]+file.Name())
 		contigs = append(contigs, contig...)
 	}
 
+	RC := map[byte]byte {'A': 'T', 'T': 'A', 'G': 'C', 'C': 'G'}
+
 	rand.Seed(time.Now().UTC().UnixNano())
 	n := 0
 	for n<=N {
+		strand := rand.Intn(2)
 		index := rand.Intn(len(contigs)-K)
 		if !bytes.Contains(contigs[index:index+K], []byte("N")) {
-			fmt.Println(string(contigs[index:index+K]))
+			if strand == 0 {
+				fmt.Println(string(contigs[index:index+K]))
+			} else {
+				reverse_read := make([]byte, K)
+				for k, c := range contigs[index:index+K] {
+					reverse_read[k] = RC[c]
+				}
+				fmt.Println(string(reverse_read))
+			}
 			n++
 		}
 	}
@@ -69,7 +79,3 @@ func contigExtract(filename string) ([]byte) {
 	}
 	return byte_buffer.Bytes()
 }
-
-
-
-
