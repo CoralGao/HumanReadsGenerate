@@ -30,7 +30,7 @@ func main() {
 
 	rand.Seed(time.Now().UTC().UnixNano())
 	n := 0
-	for n<=N {
+	for n<N {
 		strand := rand.Intn(2)
 		index := rand.Intn(len(contigs)-K)
 		if !bytes.Contains(contigs[index:index+K], []byte("N")) {
